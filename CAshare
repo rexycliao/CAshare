@@ -1,4 +1,4 @@
-pip install openpyxl
+pip install openpyxl #安裝pip套件
 
 import openpyxl
 import pandas as pd
@@ -15,6 +15,7 @@ sheet['B1'] = 'Cost'
 
 data = []
 
+#確認有要平分今日餐點的人姓名，並創建資料庫（沒有要付錢的人不要寫入）
 while True:
     try:
         num_fields = int(input("How many people join the party today（If they don't pay money today, don't count them.）: "))
@@ -31,14 +32,11 @@ for row_index, values in enumerate(data, start=2):
     name = values[0]
     sheet.cell(row=row_index, column=1, value=name)
 
-# 保存工作簿到文件
-wb.save('example_meals.xlsx')
+wb.save('example_meals.xlsx') # 保存工作簿到文件
 
-# 讀取Excel文件
-df = pd.read_excel('example_meals.xlsx')
+df = pd.read_excel('example_meals.xlsx') # 讀取Excel文件
 
-# 顯示DataFrame
-display(df)
+display(df) # 顯示DataFrame
 
 #----------平分餐點-----------
 
@@ -117,7 +115,7 @@ for i in range(1, num_personal + 1):
 
     while True:
         try:
-            meals_number = int(input(f"{field_name}, How many meals did you order by yourself: "))
+            meals_number = int(input(f"{field_name}, How many meals did you order by yourself: ")) #輸入個人點了多少餐點數量
             break
         except ValueError:
             print("please,try again in numbers.")
@@ -125,11 +123,11 @@ for i in range(1, num_personal + 1):
     tot = 0
 
     for j in range(1, meals_number + 1):
-        m_name = input(f"{j}. What is your order: ")
+        m_name = input(f"{j}. What is your order: ") #輸入個人餐點名稱
 
         while True:
             try:
-                u_input = float(input(f"{m_name}'s cost: "))  # 個人吃的餐費
+                u_input = float(input(f"{m_name}'s cost: "))  # 輸入個人餐點費用
                 break
             except ValueError:
                 print("please,try again in numbers.")
@@ -165,7 +163,7 @@ df.to_excel('example_meals.xlsx', index=False)
 
 while True:
     try:
-        tax = float(input("How many percentage of the tax：")) # ontario is 13%
+        tax = float(input("How many percentage of the tax：")) # Ontario is 13%
         break
     except ValueError:
         print("please,try again in numbers.")
@@ -193,7 +191,7 @@ Total_cost_with_tax = sum(hm['user_cost'] for hm in with_tax_list)
 
 while True:
     try:
-        tip = int(input("How many percentage of the tip："))
+        tip = int(input("How many percentage of the tip：")) # 15% or 18% is common
         break
     except ValueError:
         print("please,try again in numbers.")
@@ -212,4 +210,4 @@ for ft in with_tax_list:
     total_cost_with_tax_and_tips.append(ft['user_cost'])
 
 #print(with_tax_list)
-print("Total cost with tax and tips:", sum(total_cost_with_tax_and_tips))
+print("Total cost with tax and tips:", sum(total_cost_with_tax_and_tips)) #利用此結果與帳單上的費用對照，以確保費用平分正確
