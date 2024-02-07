@@ -40,6 +40,8 @@ df = pd.read_excel('example_meals.xlsx')
 # 顯示DataFrame
 display(df)
 
+#----------平分餐點-----------
+
 meal_list = [] 
 
 while True:
@@ -99,7 +101,7 @@ display(df)
 
 df.to_excel('example_meals.xlsx', index=False)
 
-import pandas as pd
+#---------個人餐點------------
 
 people_list = []
 
@@ -159,14 +161,14 @@ display(df)
 
 df.to_excel('example_meals.xlsx', index=False)
 
+#----------加入稅收--------------
+
 while True:
     try:
         tax = float(input("How many percentage of the tax：")) # ontario is 13%
         break
     except ValueError:
         print("please,try again in numbers.")
-
-import pandas as pd
 
 with_tax_list = []
 
@@ -186,6 +188,8 @@ for hm in name_and_cost_list:
 
 print(f"\nTotal cost with tax: {sum(hm['user_cost'] for hm in with_tax_list)}")
 Total_cost_with_tax = sum(hm['user_cost'] for hm in with_tax_list)
+
+#------------加入小費-------------
 
 while True:
     try:
