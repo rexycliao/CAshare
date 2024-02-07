@@ -4,6 +4,7 @@ import openpyxl
 import pandas as pd
 import pandas as pd
 
+#---------建立資料庫----------
 data=[]
 wb = openpyxl.Workbook() # 創建一個新的workbook
 
