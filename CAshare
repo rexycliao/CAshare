@@ -1,0 +1,211 @@
+pip install openpyxl
+
+import openpyxl
+import pandas as pd
+import pandas as pd
+
+data=[]
+wb = openpyxl.Workbook() # 創建一個新的workbook
+
+sheet = wb.active # 選擇活動的工作表（默認是第一個工作表）
+
+# 寫入數據
+sheet['A1'] = 'Name'
+sheet['B1'] = 'Cost'
+
+data = []
+
+while True:
+    try:
+        num_fields = int(input("How many people join the party today（If they don't pay money today, don't count them.）: "))
+        break
+    except ValueError:
+        print("please,try again in numbers.")
+
+for i in range(1, num_fields + 1):
+    field_name = input(f"{i}. What is your name: ")  # 請輸入用餐者名字
+    row_data = [field_name]
+    data.append(row_data)
+
+for row_index, values in enumerate(data, start=2):
+    name = values[0]
+    sheet.cell(row=row_index, column=1, value=name)
+
+# 保存工作簿到文件
+wb.save('example_meals.xlsx')
+
+# 讀取Excel文件
+df = pd.read_excel('example_meals.xlsx')
+
+# 顯示DataFrame
+display(df)
+
+meal_list = [] 
+
+while True:
+    try:
+        num_meals = int(input("How many meals need to share today: ")) # 多少餐點要平分？
+        break
+    except ValueError:
+        print("please,try again in numbers.")
+
+total = 0
+
+df = pd.DataFrame(columns=['Name', 'Cost'])
+
+for i in range(1, num_meals + 1):
+    meals_name = input(f"{i}. What is meal's name: ")  # 輸入餐點名稱
+
+    while True:
+        try:
+            cost_input = float(input(f"{meals_name}'s cost: "))  # 餐點多少錢
+            break
+        except ValueError:
+            print("please,try again in numbers.")
+
+    while True:
+        try:
+            num_person = int(input(f"How many people shared this meal together: ")) #多少人要一起平分？
+
+            break
+        except ValueError:
+            print("please,try again in numbers.")
+
+    average = cost_input / num_person if num_person > 0 else 0  #算出平均費用
+
+    shared_prices = []  # List to store shared prices for each person
+
+    for j in range(1, num_person + 1):
+        shared_name = input(f"{j}. Who will share this meal: ")  # 誰會一起平分
+        shared_prices.append((shared_name, average))
+
+    meal_list.append((meals_name, shared_prices)) 
+
+for meal, shared_prices in meal_list:
+    print(f"\n{meal}'s shared prices:")
+    for shared_name, price in shared_prices:
+        print(f"{shared_name}: {price}")
+        df = df.append({'Name': shared_name, 'Cost': price}, ignore_index=True)
+
+old_df = pd.read_excel('example_meals.xlsx')
+
+old_df = old_df.fillna(0)
+
+df = pd.concat([old_df, df], ignore_index=True)
+
+df = df.groupby('Name', as_index=False)['Cost'].sum()
+
+display(df)
+
+df.to_excel('example_meals.xlsx', index=False)
+
+import pandas as pd
+
+people_list = []
+
+while True:
+    try:
+        num_personal = int(input("How many people order by themselves: ")) #多少人自己點了餐點？
+        break
+    except ValueError:
+        print("please,try again in numbers.")
+
+for i in range(1, num_personal + 1):
+    field_name = input(f"{i}. What is your name: ")  # 請輸入名字
+
+    while True:
+        try:
+            meals_number = int(input(f"{field_name}, How many meals did you order by yourself: "))
+            break
+        except ValueError:
+            print("please,try again in numbers.")
+
+    tot = 0
+
+    for j in range(1, meals_number + 1):
+        m_name = input(f"{j}. What is your order: ")
+
+        while True:
+            try:
+                u_input = float(input(f"{m_name}'s cost: "))  # 個人吃的餐費
+                break
+            except ValueError:
+                print("please,try again in numbers.")
+
+        tot += u_input  # 將用戶輸入的值累加到總和
+
+    print(f"{field_name}'s total cost: {tot}")
+
+    person_info = {'name': field_name, 'user_cost': tot}
+    
+    people_list.append(person_info)
+
+df = pd.DataFrame(columns=['Name', 'Cost'])
+
+for person_info in people_list:
+    print(f"{person_info['name']}: {person_info['user_cost']}")
+    df = df.append({'Name': person_info['name'], 'Cost': person_info['user_cost']}, ignore_index=True)
+
+old_df = pd.read_excel('example_meals.xlsx')
+
+old_df = old_df.fillna(0)
+
+df = pd.concat([old_df, df], ignore_index=True)
+
+df = df.groupby('Name', as_index=False)['Cost'].sum()
+
+print("\nFinal DataFrame:")
+display(df)
+
+df.to_excel('example_meals.xlsx', index=False)
+
+while True:
+    try:
+        tax = float(input("How many percentage of the tax：")) # ontario is 13%
+        break
+    except ValueError:
+        print("please,try again in numbers.")
+
+import pandas as pd
+
+with_tax_list = []
+
+old_df = pd.read_excel('example_meals.xlsx')
+display(old_df)
+
+name_and_cost_list = old_df[['Name', 'Cost']].values.tolist()
+print(name_and_cost_list)
+
+for hm in name_and_cost_list:
+    cost_with_tax = hm[1] * (1 + tax / 100)
+    print(f"\n{hm[0]}'s today cost with tax: {cost_with_tax}")
+
+    with_tax_info = {'name': hm[0], 'user_cost': cost_with_tax}
+
+    with_tax_list.append(with_tax_info)
+
+print(f"\nTotal cost with tax: {sum(hm['user_cost'] for hm in with_tax_list)}")
+Total_cost_with_tax = sum(hm['user_cost'] for hm in with_tax_list)
+
+while True:
+    try:
+        tip = int(input("How many percentage of the tip："))
+        break
+    except ValueError:
+        print("please,try again in numbers.")
+
+add_tip = Total_cost_with_tax * (tip / 100)
+print(f"Total tips: {add_tip}")
+
+average_tip_per_person = add_tip / num_fields if num_fields > 0 else 0  
+print(f"The tips that everyone needs to share: {average_tip_per_person}")
+
+total_cost_with_tax_and_tips = []
+
+for ft in with_tax_list:
+    ft['user_cost'] += average_tip_per_person
+    print(f"{ft['name']}'s today cost with tax and tips: {ft['user_cost']}")
+    total_cost_with_tax_and_tips.append(ft['user_cost'])
+
+#print(with_tax_list)
+print("Total cost with tax and tips:", sum(total_cost_with_tax_and_tips))
